@@ -10,10 +10,10 @@
 
 body {
   margin:0;
+  font-family: 'DM Sans', sans-serif;
 }
 
 h1 {
-  font-family: 'DM Sans', sans-serif;
   font-weight:800;
   font-size:48px;
   text-shadow:
@@ -23,15 +23,23 @@ h1 {
      1px 1px 0 #000;
 }
 p {
-  font-family: 'DM Sans', sans-serif;
-  font-size:14px;
-  color: #333333;
+  font-size:18px;
+  color:#333333;
+}
+a.btn { 
+  color:#fff; 
+  display:inline-block; 
+  background-color:rgb(84,58,183); 
+  background: linear-gradient(0deg, rgb(66, 58, 183) 0%, rgb(0, 129, 193) 100%);
+  padding:12px; 
+  border-radius:6px; 
+  text-decoration:none;
 }
 
 .header {
   position:relative;
   text-align:center;
-  background: linear-gradient(60deg, rgba(84,58,183,1) 0%, rgba(0,172,193,1) 100%);
+  background: linear-gradient(60deg, rgb(58, 73, 183) 0%, rgb(0, 148, 193) 100%);
   color:white;
 }
 .logo {
@@ -68,7 +76,11 @@ p {
   position:relative;
   height:20vh;
   text-align:center;
-  background-color: white;
+  background-color: #fff;
+  padding-top:32px; 
+}
+.content p { 
+  max-width:768px; 
 }
 
 /* Animation */
@@ -151,8 +163,71 @@ p {
     
     <!--Content starts-->
     <div class="content flex">
-      <p>By.Goodkatz | Free to use </p>
+      <div id="installFlask" style="display:none">
+        <p>Snaps is pre-release software only available in MetaMask Flask, a canary distribution for developers with access to upcoming features.</p>
+        <a href="https://metamask.io/flask/" id="installFlaskButton" class="btn">
+          Install MetaMask Flask
+        </a>
+      </div>
+      <div id="installMobyMaskSnap">
+        <a href="#" id="installMobyMaskSnapButton" class="btn">
+          Connect and install MobyMask MVP snap
+        </a>
+      </div>
+      <div id="snapInstalled" style="display:none">
+        <p>MobyMask MVP snap installed! You will now see insights from this snap when interacting with contracts on Ethereum mainnet.</p>
+      </div>
     </div>
     <!--Content ends-->
+
+    <script type="text/javascript">
+const isFlask = async () => {
+  const provider = window.ethereum;
+
+  try {
+    const clientVersion = await provider?.request({
+      method: 'web3_clientVersion',
+    });
+
+    const isFlaskDetected = (clientVersion)?.includes('flask');
+
+    return provider && isFlaskDetected;
+  } catch {
+    return false;
+  }
+}; 
+
+const connectSnap = (event) => {
+  event.preventDefault(); 
+  const provider = window.ethereum; 
+
+  try { 
+    provider?.request({
+      method: 'wallet_enable', 
+      params: [
+        {
+          wallet_snap: {
+            ['npm:mystery-snap']: {},
+          },
+        },
+      ],
+    }); 
+  } catch { 
+
+  }
+  return false; 
+}; 
+
+window.onload = async (event) => {
+  const isFlaskDetected = await isFlask(); 
+  if(!isFlaskDetected) {
+    document.getElementById('installFlask').style.display = 'block'; 
+    document.getElementById('installMobyMaskSnap').style.display = 'none'; 
+    return; 
+  }
+
+  document.getElementById('installMobyMaskSnapButton').addEventListener('click', connectSnap); 
+}; 
+    </script>
   </body>
 </html>
