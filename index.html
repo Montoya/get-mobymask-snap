@@ -219,12 +219,10 @@ const connectSnap = async (event) => {
 
   try { 
     await provider?.request({
-      method: 'wallet_enable', 
+      method: 'wallet_requestSnaps', 
       params: [
         {
-          wallet_snap: {
-            ['npm:mobymask-snap-mvp']: {},
-          },
+          ['npm:mobymask-snap-mvp']: { }
         },
       ],
     }); 
